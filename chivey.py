@@ -1,8 +1,17 @@
 #!/usr/bin/python
 
+############################
+#
+# Created by BostonGeorge
+# August 7, 2013
+# Within Chaos...There is Profit
+#
+############################
+
 import urllib2
 import os
 
+# Some variables. Im sure there is a better way, but deal with it or change it yourself.
 pic = 1
 _path = []
 currentDir = os.getcwd()
@@ -14,10 +23,12 @@ MAX_ERROR = 10
 MIN_MONTH = 01
 pathCount = 0
 
+
+# Display a menu for the user
 def menu():
     print 'Select a category to copy:'
     print
-    print '[0] Fit Girls    [6] Girls lingerie' 	
+    print '[0] Fit Girls    	  [6] Girls lingerie' 	
     print '[1] Sexy Bikinis	  [7] Russian Brides'
     print '[2] Burn Bra		  [8] Mind the Gap'
     print '[3] Chesty Girls	  [9] Redheads'
@@ -28,15 +39,20 @@ def menu():
     print
     return selection
 
+# Get user input
 year = int(raw_input("[+] Enter starting year: "))
 month = int(raw_input("[+] Enter starting month: "))
 _time = int(raw_input("[+] How many months back should I scrape? "))
+
+# Make backups for writing files the easy way
 monthbak = month
 yearbak = year
 _timebak = _time
 
+# Add the first YYYYMM to the list
 _path.append(str(year) + str('%02d' % month))
 
+# Add the additional YYYMM to the list
 if _time > 1:
     while _time != 0:
         if month == 1:
@@ -46,19 +62,25 @@ if _time > 1:
         _path.append(str(year) + str('%02d' % month))
         _time-=1
 
+# Display the menu
 selection = menu()
 
+# The main categories. There are extras that are limited to one, not continual over a month. Add extras if you want special pics. ie blouse-bust-
 category=['fit-girls-','sexy-bikinis-','burn-bra-','chesty-girls-flbp-','mirror-girls-','hump-day-','girls-lingerie-','russian-brides-','mind-the-gap-','redheaded-chivettes-','tan-lines-','sexy-chivers-','custom']
 
+# Create folders for the pics
 for yr in _path:
     if not os.path.exists(yr): os.makedirs(yr)
 
+# Get the pics
 while _time >= 0:        
-
+    
+    #URL String and file dir.
     url=str("http://thechive.files.wordpress.com/" + str(yearbak) + "/" + str('%02d' % monthbak + "/" + category[selection] + str(pic) + ".jpg"))
     fileName=str(category[selection] + str(pic) + ".jpg")
     os.chdir(str(currentDir) + "/" + str(yearbak) + str('%02d' % monthbak))
 
+    # Try for a 202, and count the 404s so we can go to the next batch of pictures
     try:
         u = urllib2.urlopen(url)
     except urllib2.URLError, e:
@@ -67,6 +89,7 @@ while _time >= 0:
             error+=1
             pic+=1
     else:
+    	# Save the file if it is a 202
         f = open(fileName, 'wb')
         meta = u.info()
         file_size = int(meta.getheaders("Content-Length")[0])
@@ -90,6 +113,7 @@ while _time >= 0:
         error=0
         pic+=1
     
+    # Iterate through the files and do it all over again.
     if error == MAX_ERROR:
         _timebak-=1
         if monthbak == MIN_MONTH:
