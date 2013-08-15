@@ -10,19 +10,22 @@
 
 import urllib2
 import os
+import datetime
 
 # Some variables. Im sure there is a better way, but deal with it or change it yourself.
 pic = 1
 _path = []
 currentDir = os.getcwd()
 error = 0
-year = 2013
-month = 7
+year = datetime.datetime.now().strftime("%Y")
+month = datetime.datetime.now().strftime("%M")
 _time = 6
 MAX_ERROR = 10
 MIN_MONTH = 01
 pathCount = 0
 
+# The main categories. There are extras that are limited to one, not continual $
+category=['fit-girls-','sexy-bikinis-','burn-bra-','chesty-girls-flbp-','mirror-girls-','hump-day-','girls-lingerie-','russian-brides-','mind-the-gap-','redheaded-chivettes-','tan-lines-','sexy-chivers-']
 
 # Display a menu for the user
 def menu():
@@ -35,14 +38,30 @@ def menu():
     print '[4] Mirror Girls	  [10] Tan Lines'
     print '[5] Hump Day		  [11] Sexy Chivers'
     print
+    print '[12] Custom'
+    print
     selection = int(raw_input('Selection: '))
     print
+    
+    if selection == 12:
+        print 'Format: sexy-bikinis-'
+        print 'Make sure you include the dashes!!'
+        print 'Hint: click the picture you want until only the picture is showing'
+        print 'Look at the url...it should be /sexy-bikinis-01'
+        print
+        customSelection = raw_input('Custom: ')
+	print
+        category.append(customSelection)
+
     return selection
 
 # Get user input
 year = int(raw_input("[+] Enter starting year: "))
 month = int(raw_input("[+] Enter starting month: "))
 _time = int(raw_input("[+] How many months back should I scrape? "))
+
+# Get current Time
+timenow = "chivey-" + datetime.datetime.now().strftime("%H-%M-%S")
 
 # Make backups for writing files the easy way
 monthbak = month
@@ -65,12 +84,15 @@ if _time > 1:
 # Display the menu
 selection = menu()
 
-# The main categories. There are extras that are limited to one, not continual over a month. Add extras if you want special pics. ie blouse-bust-
-category=['fit-girls-','sexy-bikinis-','burn-bra-','chesty-girls-flbp-','mirror-girls-','hump-day-','girls-lingerie-','russian-brides-','mind-the-gap-','redheaded-chivettes-','tan-lines-','sexy-chivers-','custom']
+# Create main folder name chivey-HH-MM-SS
+if not os.path.exists(timenow):
+    os.makedirs(timenow)
 
+os.chdir(str(currentDir) + "/" + str(timenow) + "/")
 # Create folders for the pics
 for yr in _path:
-    if not os.path.exists(yr): os.makedirs(yr)
+    if not os.path.exists(yr): 
+        os.makedirs(yr)
 
 # Get the pics
 while _time >= 0:        
@@ -78,7 +100,7 @@ while _time >= 0:
     #URL String and file dir.
     url=str("http://thechive.files.wordpress.com/" + str(yearbak) + "/" + str('%02d' % monthbak + "/" + category[selection] + str(pic) + ".jpg"))
     fileName=str(category[selection] + str(pic) + ".jpg")
-    os.chdir(str(currentDir) + "/" + str(yearbak) + str('%02d' % monthbak))
+    os.chdir(str(currentDir) + "/" + str(timenow) + "/" + str(yearbak) + str('%02d' % monthbak))
 
     # Try for a 202, and count the 404s so we can go to the next batch of pictures
     try:
