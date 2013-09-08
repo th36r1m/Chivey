@@ -3,7 +3,7 @@ Chivey
 
 ==About==
 
-Are you tired of all those adds and rabbit holes on the chive? Just want to see some hotties? Well this script was generated as a proof of concept that a person does not need to visit the chive site in person, but rather can get a copy of all the photos you wish to see at a blink of an eye. I would also like to mention that I am not a python master, so if you can't execute the code because it is ugly, then thats too bad b/c there are lots of hottie pics on the chive.
+Simple script that gets the chive photos
 
 ==How To==
 
